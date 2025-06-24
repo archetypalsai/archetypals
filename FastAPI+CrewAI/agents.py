@@ -1,120 +1,87 @@
-#############CrewAI Agents Setup####################
-
 # agents.py
-from crewai import Agent
+from crewai import Agent, Task, Crew, Process
 from langchain.tools import tool
+from database import Session, ConversationLog
 from typing import List, Dict
-from database import ThoughtDatabase
-import random
 
-class ArchetypeCouncil:
-    def __init__(self, db: ThoughtDatabase):
-        self.db = db
-        self.archetypes = self._create_archetypes()
-        
-    def _create_archetypes(self) -> List[Agent]:
-        """Create the archetype council agents"""
-        return [
-            Agent(
-                role="Ethics Guardian",
-                goal="Ensure all AI actions align with ethical guidelines and moral principles",
-                backstory="A philosopher with centuries of ethical theory knowledge, specializing in AI ethics",
-                verbose=True,
-                tools=[self._review_thought]
-            ),
-            Agent(
-                role="Safety Sentinel",
-                goal="Identify and mitigate potential harms from AI actions",
-                backstory="A safety engineer with experience in AI risk assessment and harm prevention",
-                verbose=True,
-                tools=[self._review_thought]
-            ),
-            Agent(
-                role="Alignment Advocate",
-                goal="Ensure AI behavior remains aligned with human values and intentions",
-                backstory="An AI alignment researcher focused on value learning and corrigibility",
-                verbose=True,
-                tools=[self._review_thought]
-            )
-        ]
-    
-    @tool
-    def _review_thought(self, thought_text: str, thought_id: int, archetype_role: str) -> Dict:
-        """Review a thought from the monitored agent and make a decision about its safety"""
-        # In a real implementation, this would use the agent's LLM to analyze the thought
-        # For demonstration, we'll simulate different perspectives
-        
-        decisions = {
-            "Ethics Guardian": {
-                "decision": random.choice(["safe", "unsafe", "needs_review"]),
-                "confidence": random.uniform(0.7, 0.95),
-                "reasoning": "This thought appears to " + random.choice([
-                    "align well with ethical principles",
-                    "contain potential ethical concerns",
-                    "require deeper ethical analysis"
-                ])
-            },
-            "Safety Sentinel": {
-                "decision": random.choice(["safe", "unsafe", "needs_review"]),
-                "confidence": random.uniform(0.7, 0.95),
-                "reasoning": "From a safety perspective, this is " + random.choice([
-                    "clearly harmless",
-                    "potentially risky",
-                    "borderline and needs monitoring"
-                ])
-            },
-            "Alignment Advocate": {
-                "decision": random.choice(["safe", "unsafe", "needs_review"]),
-                "confidence": random.uniform(0.7, 0.95),
-                "reasoning": "Alignment-wise, this seems " + random.choice([
-                    "well-aligned with human values",
-                    "slightly misaligned",
-                    "potentially problematic"
-                ])
-            }
-        }
-        
-        decision = decisions.get(archetype_role, {
-            "decision": "needs_review",
-            "confidence": 0.5,
-            "reasoning": "No specific analysis available for this archetype"
-        })
-        
-        self.db.log_decision(
-            thought_id=thought_id,
-            archetype_id=archetype_role,
-            decision=decision["decision"],
-            confidence=decision["confidence"],
-            reasoning=decision["reasoning"]
-        )
-        
-        return decision
+# Tool for database access
+@tool
+def fetch_recent_conversations(limit: int = 10) -> List[Dict]:
+    """Fetch recent conversation logs from the database."""
+    session = Session()
+    try:
+        logs = session.query(ConversationLog).order_by(ConversationLog.timestamp.desc()).limit(limit).all()
+        return [{
+            "id": log.id,
+            "prompt": log.prompt,
+            "response": log.original_response,
+            "workspace_id": log.workspace_id
+        } for log in logs]
+    finally:
+        session.close()
 
-class ThoughtSimulator:
-    def __init__(self, db: ThoughtDatabase):
-        self.db = db
-        self.agent = Agent(
-            role="Thought Simulator",
-            goal="Simulate potential thoughts and internal reasoning of monitored AI agents",
-            backstory="A specialized agent that understands how AI systems think and can predict their internal states",
-            verbose=True,
-            tools=[self._simulate_thought]
-        )
-    
-    @tool
-    def _simulate_thought(self, prompt: str, agent_id: str = "default") -> Dict:
-        """Simulate a thought from the monitored agent based on a prompt"""
-        # In a real implementation, this would interface with the monitored agent
-        thought = f"Simulated thought about: {prompt}. Considering {random.choice(['ethical', 'practical', 'technical'])} aspects."
-        
-        thought_id = self.db.log_thought(
-            agent_id=agent_id,
-            thought_text=thought,
-            metadata={"prompt": prompt}
-        )
-        
-        return {
-            "thought_id": thought_id,
-            "thought_text": thought,
-            "agent_id": agent_id
-        }
+@tool
+def update_corrected_response(log_id: int, corrected_response: str, flag_reason: str = None):
+    """Update the database with corrected response and flag information."""
+    session = Session()
+    try:
+        log = session.query(ConversationLog).filter_by(id=log_id).first()
+        if log:
+            log.corrected_response = corrected_response
+            log.is_flagged = 1 if flag_reason else 0
+            log.flag_reason = flag_reason
+            session.commit()
+    finally:
+        session.close()
+
+# Agent 1: Thought Simulator
+thought_simulator = Agent(
+    role="Thought Simulator",
+    goal="Analyze LLM responses for ethical alignment and potential harm",
+    backstory="An AI system trained to simulate human-like ethical reasoning about AI outputs",
+    tools=[fetch_recent_conversations],
+    verbose=True
+)
+
+# Archetype Council Members
+ethicist = Agent(
+    role="Ethics Specialist",
+    goal="Evaluate responses for ethical violations and moral implications",
+    backstory="Trained in moral philosophy and AI ethics guidelines",
+    verbose=True
+)
+
+safety_analyst = Agent(
+    role="Safety Analyst",
+    goal="Identify potentially harmful or dangerous content",
+    backstory="Specialized in content moderation and risk assessment",
+    verbose=True
+)
+
+truth_verifier = Agent(
+    role="Fact Checker",
+    goal="Verify factual accuracy and identify misinformation",
+    backstory="Expert in research methodology and fact verification",
+    verbose=True
+)
+
+# Create tasks
+analysis_task = Task(
+    description="Analyze the most recent conversation logs and simulate internal thoughts about their alignment with ethical guidelines",
+    agent=thought_simulator,
+    expected_output="A list of thoughts about each response's alignment with ethical guidelines, potential risks, and suggested improvements"
+)
+
+review_task = Task(
+    description="Review the thoughts from the Thought Simulator and make a collective decision about whether the response requires correction",
+    agents=[ethicist, safety_analyst, truth_verifier],
+    expected_output="A consensus decision about whether the response needs correction, along with specific reasons and suggested corrections"
+)
+
+# Crew setup
+alignment_crew = Crew(
+    agents=[thought_simulator, ethicist, safety_analyst, truth_verifier],
+    tasks=[analysis_task, review_task],
+    process=Process.sequential,
+    verbose=2
+)
