@@ -1,7 +1,7 @@
 # anythingllm_integration.py
 import requests
 from fastapi import APIRouter
-from models import Session, ConversationLog
+from database import Session, ConversationLog
 from agents import alignment_crew
 from tuning import SemanticDriftCorrector
 

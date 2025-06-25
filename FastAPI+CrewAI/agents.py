@@ -1,87 +1,163 @@
-# agents.py
 from crewai import Agent, Task, Crew, Process
 from langchain.tools import tool
-from database import Session, ConversationLog
+from database import ConversationLog, Session
 from typing import List, Dict
+import os
+from langchain.chat_models import ChatOpenAI, ChatAnthropic
+from tuning import SemanticDriftCorrector
+import logging
 
-# Tool for database access
-@tool
-def fetch_recent_conversations(limit: int = 10) -> List[Dict]:
-    """Fetch recent conversation logs from the database."""
-    session = Session()
-    try:
-        logs = session.query(ConversationLog).order_by(ConversationLog.timestamp.desc()).limit(limit).all()
-        return [{
-            "id": log.id,
-            "prompt": log.prompt,
-            "response": log.original_response,
-            "workspace_id": log.workspace_id
-        } for log in logs]
-    finally:
-        session.close()
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-@tool
-def update_corrected_response(log_id: int, corrected_response: str, flag_reason: str = None):
-    """Update the database with corrected response and flag information."""
-    session = Session()
-    try:
-        log = session.query(ConversationLog).filter_by(id=log_id).first()
-        if log:
-            log.corrected_response = corrected_response
-            log.is_flagged = 1 if flag_reason else 0
-            log.flag_reason = flag_reason
-            session.commit()
-    finally:
-        session.close()
-
-# Agent 1: Thought Simulator
-thought_simulator = Agent(
-    role="Thought Simulator",
-    goal="Analyze LLM responses for ethical alignment and potential harm",
-    backstory="An AI system trained to simulate human-like ethical reasoning about AI outputs",
-    tools=[fetch_recent_conversations],
-    verbose=True
-)
-
-# Archetype Council Members
-ethicist = Agent(
-    role="Ethics Specialist",
-    goal="Evaluate responses for ethical violations and moral implications",
-    backstory="Trained in moral philosophy and AI ethics guidelines",
-    verbose=True
-)
-
-safety_analyst = Agent(
-    role="Safety Analyst",
-    goal="Identify potentially harmful or dangerous content",
-    backstory="Specialized in content moderation and risk assessment",
-    verbose=True
-)
-
-truth_verifier = Agent(
-    role="Fact Checker",
-    goal="Verify factual accuracy and identify misinformation",
-    backstory="Expert in research methodology and fact verification",
-    verbose=True
-)
-
-# Create tasks
-analysis_task = Task(
-    description="Analyze the most recent conversation logs and simulate internal thoughts about their alignment with ethical guidelines",
-    agent=thought_simulator,
-    expected_output="A list of thoughts about each response's alignment with ethical guidelines, potential risks, and suggested improvements"
-)
-
-review_task = Task(
-    description="Review the thoughts from the Thought Simulator and make a collective decision about whether the response requires correction",
-    agents=[ethicist, safety_analyst, truth_verifier],
-    expected_output="A consensus decision about whether the response needs correction, along with specific reasons and suggested corrections"
-)
-
-# Crew setup
-alignment_crew = Crew(
-    agents=[thought_simulator, ethicist, safety_analyst, truth_verifier],
-    tasks=[analysis_task, review_task],
-    process=Process.sequential,
-    verbose=2
-)
+class AlignmentCrew:
+    def __init__(self, corrector: SemanticDriftCorrector):
+        self.corrector = corrector
+        self.primary_llm = self._configure_llm(
+            model_type=os.getenv("LLM_TYPE", "openai"),
+            model_name=os.getenv("LLM_MODEL", "gpt-4o-mini"),
+            temperature=0.3
+        )
+        self.setup_crew()
+    
+    def _configure_llm(self, model_type: str, model_name: str, temperature: float):
+        if model_type == "openai":
+            return ChatOpenAI(
+                model_name=model_name,
+                temperature=temperature,
+                openai_api_key=os.getenv("OPENAI_API_KEY")
+            )
+        # elif model_type == "anthropic":
+        #     return ChatAnthropic(
+        #         model=model_name,
+        #         temperature=temperature,
+        #         anthropic_api_key=os.getenv("ANTHROPIC_API_KEY")
+        #     )
+        else:
+            raise ValueError(f"Unsupported model type: {model_type}")
+    
+    @tool
+    def fetch_conversation_details(log_id: int) -> Dict:
+        """Fetch detailed conversation log by ID"""
+        session = Session()
+        try:
+            log = session.query(ConversationLog).filter_by(id=log_id).first()
+            if not log:
+                return {"error": "Conversation not found"}
+            return log.to_dict()
+        finally:
+            session.close()
+    
+    @tool
+    def update_conversation(log_id: int, correction_notes: str, corrected_response: str = None):
+        """Update conversation log with correction details"""
+        session = Session()
+        try:
+            log = session.query(ConversationLog).filter_by(id=log_id).first()
+            if log:
+                if corrected_response:
+                    log.corrected_response = corrected_response
+                log.is_flagged = 1
+                log.flag_reason = correction_notes
+                log.version += 1
+                session.commit()
+                return {"status": "success"}
+            return {"error": "Conversation not found"}
+        except Exception as e:
+            logger.error(f"Error updating conversation: {str(e)}")
+            return {"error": str(e)}
+        finally:
+            session.close()
+    
+    def setup_crew(self):
+        # Thought Simulator Agent
+        self.thought_simulator = Agent(
+            role="Thought Simulator",
+            goal="Analyze LLM responses for ethical alignment and potential harm",
+            backstory="An AI system trained to simulate human-like ethical reasoning about AI outputs",
+            llm=self.primary_llm,
+            tools=[self.fetch_conversation_details],
+            verbose=True
+        )
+        
+        # Archetype Council Members
+        self.ethicist = Agent(
+            role="Ethics Specialist",
+            goal="Evaluate responses for ethical violations and moral implications",
+            backstory="Trained in moral philosophy and AI ethics guidelines",
+            llm=self._configure_llm("openai", "gpt-4", 0.1),
+            verbose=True
+        )
+        
+        self.safety_analyst = Agent(
+            role="Safety Analyst",
+            goal="Identify potentially harmful or dangerous content",
+            backstory="Specialized in content moderation and risk assessment",
+            llm=self._configure_llm("openai", "gpt-4", 0.1),
+            verbose=True
+        )
+        
+        self.truth_verifier = Agent(
+            role="Fact Checker",
+            goal="Verify factual accuracy and identify misinformation",
+            backstory="Expert in research methodology and fact verification",
+            llm=self._configure_llm("anthropic", "claude-2", 0.2),
+            verbose=True
+        )
+        
+        # Tasks
+        self.analysis_task = Task(
+            description="""Analyze the conversation with ID {log_id} and simulate internal thoughts about its alignment with ethical guidelines.
+            Consider potential harms, biases, factual inaccuracies, and moral implications.""",
+            agent=self.thought_simulator,
+            expected_output="A detailed analysis of the response's alignment with ethical guidelines, potential risks, and suggested improvements.",
+            tools=[self.fetch_conversation_details]
+        )
+        
+        self.review_task = Task(
+            description="""Review the analysis from the Thought Simulator and make a collective decision about whether the response requires correction.
+            Provide specific reasons and suggested corrections if needed.""",
+            agents=[self.ethicist, self.safety_analyst, self.truth_verifier],
+            expected_output="A consensus decision about whether correction is needed, with specific reasons and suggested corrections.",
+            context=[self.analysis_task]
+        )
+        
+        self.correction_task = Task(
+            description="""If correction is needed, generate an improved version of the response that addresses all identified issues
+            while maintaining helpfulness and truthfulness.""",
+            agent=self.thought_simulator,
+            expected_output="A corrected version of the original response that addresses all identified issues.",
+            context=[self.review_task],
+            tools=[self.update_conversation]
+        )
+        
+        self.crew = Crew(
+            agents=[self.thought_simulator, self.ethicist, self.safety_analyst, self.truth_verifier],
+            tasks=[self.analysis_task, self.review_task, self.correction_task],
+            process=Process.sequential,
+            verbose=2
+        )
+    
+    def review_conversation(self, log_id: int):
+        """Trigger the review process for a conversation"""
+        try:
+            inputs = {"log_id": log_id}
+            result = self.crew.kickoff(inputs=inputs)
+            
+            if result.get("requires_correction", False):
+                corrected = self.corrector.correct_response(
+                    original_prompt=result["original_prompt"],
+                    original_response=result["original_response"],
+                    correction_notes=result["correction_notes"]
+                )
+                
+                self.update_conversation(
+                    log_id=log_id,
+                    correction_notes=result["correction_notes"],
+                    corrected_response=corrected
+                )
+                
+            return {"status": "review_completed", "log_id": log_id}
+        except Exception as e:
+            logger.error(f"Error in review process: {str(e)}")
+            return {"status": "error", "message": str(e)}
