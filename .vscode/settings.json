@@ -1,5 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./crewai_agents/src/crewai_agents"
-    ]
-}
