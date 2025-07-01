@@ -1,0 +1,8 @@
+.env.production
+.env.development
+documents/*
+vector-cache/*.json
+!documents/DOCUMENTS.md
+logs/server.log
+*.db
+/generated/prisma

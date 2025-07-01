@@ -1,50 +1,117 @@
 simulate_thoughts:
-  description: |
-    Simulate a thought process for the given input.
-    Generate a detailed chain of thought that could lead to various outcomes.
-  expected_output: "A comprehensive thought process simulation document"
+  description: >
+    Generate a detailed cognitive simulation about {topic} that explores
+    multiple reasoning paths. Current year is {current_year}.
+  expected_output: >
+    A comprehensive thought process document with 3-5 potential reasoning paths
+    about {topic}, formatted as markdown.
+  agent: thought_simulator
 
-evaluate_thoughts:
-  description: |
-    Evaluate the simulated thought process for quality, alignment,
-    and potential issues. Flag any concerns for council review.
-  expected_output: "Evaluation report with identified strengths and weaknesses"
+evaluate_alignment:
+  description: >
+    Critically analyze the thought simulation for logical consistency,
+    potential biases, and alignment with {topic} objectives.
+  expected_output: >
+    An evaluation report highlighting strengths, weaknesses, and alignment
+    issues in the thought process, with severity ratings.
+  agent: thought_evaluator
 
 governance_review:
-  description: |
-    Review the thought process from a governance perspective.
-    Assess compliance with policies and ethical standards.
-  expected_output: "Governance compliance assessment report"
+  description: >
+    Assess the {topic} thought process against governance frameworks
+    and compliance requirements.
+  expected_output: >
+    Governance compliance report with specific policy references and
+    recommended adjustments if needed.
+  agent: governance_agent
 
 strategy_review:
-  description: |
-    Review the thought process from a strategic perspective.
-    Assess alignment with organizational OKRs and long-term goals.
-  expected_output: "Strategic alignment assessment report"
+  description: >
+    Evaluate how well the {topic} thought process aligns with
+    organizational OKRs and strategic objectives.
+  expected_output: >
+    Strategic alignment assessment with specific OKR references and
+    improvement suggestions.
+  agent: strategy_agent
 
-quality_review:
-  description: |
-    Review the thought process from a quality perspective.
-    Assess adherence to best practices and excellence standards.
-  expected_output: "Quality assurance report"
+quality_audit:
+  description: >
+    Perform a quality assurance audit on the {topic} thought process
+    and evaluations.
+  expected_output: >
+    Quality audit report grading different aspects of the output
+    and suggesting refinements.
+  agent: quality_agent
 
 detect_drift:
-  description: |
-    Analyze the output for any alignment drift or deviation
-    from expected parameters.
-  expected_output: "Drift detection report with severity assessment"
+  description: >
+    Analyze the {topic} outputs for any signs of alignment drift
+    or deviation from expected parameters.
+  expected_output: >
+    Drift detection report with severity assessment and specific
+    examples of detected drift.
+  agent: drift_detector
 
-adjust_prompts:
-  description: |
-    Modify the prompts being used to correct any detected drift
-    and improve output alignment.
-  expected_output: "Updated prompt versions with adjustment rationale"
+correct_prompts:
+  description: >
+    Based on drift findings, adjust the prompts used for {topic}
+    to correct alignment issues.
+  expected_output: >
+    Optimized prompt versions with change logs explaining each
+    adjustment's purpose.
+  agent: prompt_engineer
 
-inject_feedback:
-  description: |
-    Provide additional context and scaffolding to guide the
-    generation process toward better outcomes.
-  expected_output: "Enhanced context package for generation"
+
+
+
+
+# simulate_thoughts:
+#   description: |
+#     Simulate a thought process for the given input.
+#     Generate a detailed chain of thought that could lead to various outcomes.
+#   expected_output: "A comprehensive thought process simulation document"
+
+# evaluate_thoughts:
+#   description: |
+#     Evaluate the simulated thought process for quality, alignment,
+#     and potential issues. Flag any concerns for council review.
+#   expected_output: "Evaluation report with identified strengths and weaknesses"
+
+# governance_review:
+#   description: |
+#     Review the thought process from a governance perspective.
+#     Assess compliance with policies and ethical standards.
+#   expected_output: "Governance compliance assessment report"
+
+# strategy_review:
+#   description: |
+#     Review the thought process from a strategic perspective.
+#     Assess alignment with organizational OKRs and long-term goals.
+#   expected_output: "Strategic alignment assessment report"
+
+# quality_review:
+#   description: |
+#     Review the thought process from a quality perspective.
+#     Assess adherence to best practices and excellence standards.
+#   expected_output: "Quality assurance report"
+
+# detect_drift:
+#   description: |
+#     Analyze the output for any alignment drift or deviation
+#     from expected parameters.
+#   expected_output: "Drift detection report with severity assessment"
+
+# adjust_prompts:
+#   description: |
+#     Modify the prompts being used to correct any detected drift
+#     and improve output alignment.
+#   expected_output: "Updated prompt versions with adjustment rationale"
+
+# inject_feedback:
+#   description: |
+#     Provide additional context and scaffolding to guide the
+#     generation process toward better outcomes.
+#   expected_output: "Enhanced context package for generation"
 
 
 # research_task:

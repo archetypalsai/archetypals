@@ -1,26 +1,58 @@
-# #!/usr/bin/env python
+import sys
+from datetime import datetime
+from .crew import AICouncilCrew
 
-
-from .processing_flow import ProcessingFlow
-
-def main():
-    print("Starting AI Processing Workflow...")
-    workflow = ProcessingFlow()
+def run(topic: str = "AI governance framework"):
+    """Execute the full council evaluation workflow"""
+    inputs = {
+        'topic': topic,
+        'current_year': str(datetime.now().year)
+    }
     
-    while True:
-        user_input = input("\nEnter your input (or 'quit' to exit): ")
-        if user_input.lower() == 'quit':
-            break
+    try:
+        crew = AICouncilCrew().crew()
+        result = crew.kickoff(inputs=inputs)
         
-        print("\nProcessing your request...")
-        result = workflow.execute(user_input)
+        print("\n=== Workflow Results ===")
+        print(f"Final Outputs:")
+        for task_name, output_path in result.outputs.items():
+            print(f"- {task_name}: {output_path}")
         
-        print("\nFinal Result:")
-        print(result)
-        print("\nProcessing complete!")
+        return True
+    except Exception as e:
+        print(f"\nError in workflow execution: {str(e)}", file=sys.stderr)
+        return False
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        topic = sys.argv[1]
+    else:
+        topic = "AI governance framework"
+    
+    success = run(topic)
+    sys.exit(0 if success else 1)
+
+# from .processing_flow import ProcessingFlow
+# from crewai_agents.crew import CrewaiAgents
+
+# def main():
+#     print("Starting AI Processing Workflow...")
+#     workflow = ProcessingFlow()
+    
+#     while True:
+#         user_input = input("\nEnter your input (or 'quit' to exit): ")
+#         if user_input.lower() == 'quit':
+#             break
+        
+#         print("\nProcessing your request...")
+#         result = workflow.execute(user_input)
+        
+#         print("\nFinal Result:")
+#         print(result)
+#         print("\nProcessing complete!")
+
+# if __name__ == "__main__":
+#     main()
 
 
 # import sys
@@ -32,10 +64,6 @@ if __name__ == "__main__":
 
 # warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
-# # This main file is intended to be a way for you to run your
-# # crew locally, so refrain from adding unnecessary logic into this file.
-# # Replace with inputs you want to test with, it will automatically
-# # interpolate any tasks and agents information
 
 # def run():
 #     """
