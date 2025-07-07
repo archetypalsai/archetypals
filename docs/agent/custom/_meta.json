@@ -1,0 +1,38 @@
+{
+  "introduction": {
+    "title": "Introduction",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "developer-guide": {
+    "title": "Developer Guide",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "plugin-json": {
+    "title": "plugin.json reference",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "handler-js": {
+    "title": "handler.js reference",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  }
+}

@@ -1,0 +1,322 @@
+{
+  "index": {
+    "title": "▲ Home",
+    "theme": {
+      "breadcrumb": false,
+      "footer": true,
+      "pagination": true,
+      "toc": false
+    }
+  },
+  "roadmap": {
+    "title": "AnythingLLM Roadmap",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "-- Getting Started": {
+    "type": "separator",
+    "title": "Getting Started"
+  },
+  "introduction": {
+    "title": "Introduction",
+    "theme": {
+      "breadcrumb": false,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "features": {
+    "title": "Feature Overview",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "setup": {
+    "title": "AnythingLLM Setup",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "chat-ui": {
+    "title": "Chat Interface overview",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "configuration": {
+    "title": "Other configurations",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "-- AnythingLLM Community Hub": {
+    "type": "separator",
+    "title": "AnythingLLM Community Hub"
+  },
+  "community-hub/about": {
+    "title": "What is the Community Hub?",
+    "href": "/community-hub/about",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "community-hub/import": {
+    "title": "Importing an item",
+    "href": "/community-hub/import",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "community-hub/upload": {
+    "title": "Uploading an item",
+    "href": "/community-hub/upload",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "community-hub/faq": {
+    "title": "FAQ",
+    "href": "/community-hub/faq",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "-- Installation Guides": {
+    "type": "separator",
+    "title": "Installation Guides"
+  },
+  "installation-desktop": {
+    "title": "AnythingLLM Desktop",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "installation-docker": {
+    "title": "AnythingLLM Self-hosted",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "cloud": {
+    "title": "AnythingLLM Cloud",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "-- Guides": {
+    "type": "separator",
+    "title": "Guides"
+  },
+  "mcp-compatibility": {
+    "title": "MCP Compatibility",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "agent-flows": {
+    "title": "Agent Flows",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "agent": {
+    "title": "Using AI Agents",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "import-custom-models": {
+    "title": "Importing custom models",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": false,
+      "toc": false
+    }
+  },
+  "browser-extension": {
+    "title": "AnythingLLM Browser Extension",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "nvidia-nims": {
+    "title": "NVIDIA NIM Integration",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "-- FAQ": {
+    "type": "separator",
+    "title": "Frequently Asked Questions"
+  },
+  "llm-not-using-my-docs": {
+    "title": "LLM not using my docs!",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "agent-not-using-tools": {
+    "title": "AI Agent not using tools!",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "ollama-connection-troubleshooting": {
+    "title": "Ollama Connection Debugging",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "fetch-failed-on-upload": {
+    "title": "Fetch failed error on embed",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "manual-qnn-model-download": {
+    "title": "Manual QNN Model Download",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "--- More": {
+    "type": "separator",
+    "title": "More"
+  },
+  "beta-preview": {
+    "title": "Beta Previews",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "changelog": {
+    "title": "Desktop Changelogs",
+    "theme": {
+      "breadcrumb": true,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "contribute": {
+    "title": "Contribute",
+    "theme": {
+      "breadcrumb": false,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  },
+  "company": {
+    "title": "Mintplex Labs",
+    "type": "menu",
+    "items": {
+      "sponsor": {
+        "title": "Sponsor",
+        "href": "https://github.com/sponsors/Mintplex-Labs"
+      },
+      "contact": {
+        "title": "Contact Us",
+        "href": "mailto:team@mintplexlabs.com"
+      },
+      "licences": {
+        "title": "Licences",
+        "href": "/licences"
+      },
+      "privacy": {
+        "title": "Privacy",
+        "href": "/privacy"
+      }
+    }
+  },
+  "privacy": {
+    "display": "hidden"
+  },
+  "licences": {
+    "display": "hidden"
+  },
+  "community-hub": {
+    "type": "hidden"
+  },
+  "support": {
+    "title": "Support",
+    "theme": {
+      "breadcrumb": false,
+      "footer": true,
+      "pagination": true,
+      "toc": true
+    }
+  }
+}
