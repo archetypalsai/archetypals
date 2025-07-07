@@ -1,0 +1,138 @@
+---
+title: "Windows Installation"
+description: "Windows Installation guide for AnythingLLM"
+---
+
+import { Callout, Cards } from "nextra/components";
+import Image from "next/image";
+
+<Image
+  src="/images/getting-started/installation/windows/header-image.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="AnythingLLM Windows Installation"
+/>
+
+# Windows Installation
+
+**[1. Install using the Installation `.exe` file](#install-using-the-installation-file)**
+
+## Install using the installation file
+
+<Callout type="warning" emoji="⚠️">
+  **Application is not signed!**
+
+➤ The AnythingLLM windows application is currently unsigned and Windows defender or other anti-virus software will sometimes flag the application as malicious.
+
+➤ If you do not want to bypass that alert for any reason - please use AnythingLLM another way.
+
+</Callout>
+
+<Callout type="warning" emoji="️⚠️">
+  **OPERATING SYSTEM NOTICE**
+
+➤ AnythingLLM is intended to be used on an user account of Windows Home. Other versions of windows (Enterprise or Server) may not work. We target for Windows 11.
+
+</Callout>
+
+## Downloading the installation file
+
+Here is the download link for the latest version of Anything LLM Windows.
+
+<Card
+  title="Windows 10+ (Home, Professional - x86 64-bit)"
+  href="https://cdn.anythingllm.com/latest/AnythingLLMDesktop.exe"
+></Card>
+
+<Card
+  title="Windows 10+ (Home, Professional - ARM 64-bit)"
+  href="https://cdn.anythingllm.com/latest/AnythingLLMDesktop-Arm64.exe"
+></Card>
+
+export const Card = Object.assign(
+  // Copy card component and add default props
+  Cards.Card.bind(),
+  {
+    displayName: "Card",
+    defaultProps: {
+      image: false,
+      arrow: true,
+      target: "_blank",
+    },
+  }
+);
+
+Your internet browser may need you to verify you want to download and run the AnythingLLM Desktop app since it may be marked as "untrusted" depending on your browser security settings.
+
+Click "**Keep**" when downloading to allow the file to download.
+
+<Image
+  src="/images/getting-started/installation/windows/browser-warning.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="AnythingLLM Windows Install Browser Warning"
+/>
+
+## Installing the application
+
+After downloading the windows `exe` installer for AnythingLLM, you can double-click the installer and it will display the installation process.
+
+<Callout type="info" emoji="️💡">
+  **Anti-Virus false positive**
+
+➤ Since the application is unsigned. Native windows defender will want to ensure you mean to execute this application. Click on "more details" and the **"Run anyway"** button will be visible.
+
+**➤ This alert is temporary until the application signing process is completed on our end.**
+
+</Callout>
+
+<Image
+  src="/images/getting-started/installation/windows/anti-virus-warning.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="AnythingLLM Windows Install Anti Virus Warning"
+/>
+
+After which, now the regular installer can run to install AnythingLLM Desktop!
+
+<Image
+  src="/images/getting-started/installation/windows/install.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="AnythingLLM Windows Install"
+/>
+
+<Callout type="info" emoji="️💡">
+  **Local LLM support**
+
+➤ AnythingLLM desktop includes a built-in local LLM powered via [Ollama](https://ollama.com/). This is a super convenient way to get started with LLMs without any additional setup.
+
+In order for AnythingLLM to leverage your GPU (NVIDIA or AMD) or even NPU we need to install some extra dependencies. This will be done automatically during installation.
+
+If these extra dependencies are not installed, you will see a warning in the UI and you will get reduced performance for local LLMs since you will be limited to CPU processing.
+
+[Read this on how to manually install the dependencies if the automatic installation fails](./manual-install.mdx)
+
+</Callout>
+
+<Image
+  src="/images/getting-started/installation/windows/external-support.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="AnythingLLM Windows Install External Support"
+/>
+
+Click on the application name "**AnythingLLM**" on your desktop to boot up AnythingLLM!
+
+<Image
+  src="/images/getting-started/installation/windows/desktop.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="AnythingLLM Windows Open"
+/>

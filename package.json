@@ -1,0 +1,42 @@
+{
+  "name": "anythingllm-docs",
+  "version": "1.1.0",
+  "description": "AnythingLLM Documentation",
+  "scripts": {
+    "dev": "next dev --port 3333",
+    "img": "node scripts/compress-images.mjs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "yarn prettier --ignore-path .prettierignore --write ./pages"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mintplex-Labs/anythingllm-docs.git"
+  },
+  "author": "Mintplex Labs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mintplex-Labs/anythingllm-docs/issues"
+  },
+  "homepage": "https://github.com/Mintplex-Labs/anythingllm-docs#readme",
+  "dependencies": {
+    "@next/third-parties": "^14.2.3",
+    "@vercel/og": "^0.6.2",
+    "next": "^14.2.10",
+    "nextra": "^2.13.4",
+    "nextra-theme-docs": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sharp": "^0.33.3"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "18.11.10",
+    "imagemin": "^9.0.0",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^10.0.0",
+    "prettier": "^3.2.5",
+    "typescript": "^4.9.3"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

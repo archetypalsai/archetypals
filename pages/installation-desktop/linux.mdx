@@ -1,0 +1,43 @@
+---
+title: "Linux Installation"
+description: "Linux Installation guide for AnythingLLM"
+---
+
+import { Callout, Cards } from "nextra/components";
+import Image from "next/image";
+
+<Image
+  src="/images/getting-started/installation/linux/header-image.png"
+  height={1080}
+  width={1920}
+  quality={100}
+  alt="AnythingLLM Installation"
+/>
+
+# Linux Installation
+
+**1. Install using the [installer script](#install-using-the-installer-script)**
+
+## Install using the installer script
+
+<Callout type="warning" emoji="⚠️">
+  **NOTICE**
+
+➤ AnythingLLM packages as an AppImage but you **will not** be able to boot if you run just the AppImage. Please only use the script below.
+
+➤ Please open a [Github Issue](https://github.com/Mintplex-Labs/anything-llm/issues) if you have installation or bootup troubles.
+
+</Callout>
+
+First, open a terminal on your Linux machine and run this command.
+
+```shell copy
+curl -fsSL https://cdn.anythingllm.com/latest/installer.sh | sh
+```
+
+You can view the raw script contents [here](https://github.com/Mintplex-Labs/anything-llm/blob/desktop/linux_installer.sh).
+
+This will download the latest version of AnythingLLM's AppImage, unpack it, and then supply a symlink to seamlessly run AnythingLLM.
+This script will unpack the app in `$HOME/AnythingLLMDesktop`.
+
+You can start the app at any time by running `./AnythingLLMDesktop/start`. This will boot the app with full logging.
